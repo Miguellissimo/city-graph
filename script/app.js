@@ -2,7 +2,8 @@
 	/* global $ */
 	/* global google */
 	/* global console */
-	/* InstagramApi */
+	/* global InstagramApi */
+    /* global GoogleMapsFunctions */
 
 	var map;
 
@@ -27,10 +28,14 @@
         var lat = event.latLng.lat();
         var lng = event.latLng.lng();
 
-        console.log(lat + " " + lng);
+        GoogleMapsFunctions.getCityNameFromCoordinates(lat, lng, function(cityName){
+            console.log(cityName);
+            // TODO: pass cityName to InstagramFunctions
+
+        });
 	}
 
-	function initializeMap() {
+    function initializeMap() {
 		var mapProp = {
 			center: new google.maps.LatLng(0,0),
 			zoom: 8,
@@ -45,6 +50,6 @@
     }
 
     $(document).ready(function() {
-       initializeMap();
-   });
+        initializeMap();
+    });
 })();
