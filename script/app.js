@@ -107,6 +107,16 @@ var googleMap = document.getElementById('googleMap');
 map = new google.maps.Map(googleMap, mapProp);
 setMapCenter();
 
+map.addListener('zoom_changed', function() {
+    if (markers.length > 0) {
+		for (var j = 0; j < markers.length; j++) {
+			markers[j].setMap(null);
+		}
+
+		markers = [];
+	}
+});
+
 google.maps.event.addListener(map, 'click', mapClicked);
 
 
