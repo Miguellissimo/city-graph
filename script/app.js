@@ -7,6 +7,7 @@
     /* global math */
 
     var map;
+    var markers = [];
 
     var IMAGECOUNT = 8;
 
@@ -39,14 +40,14 @@
         // TODO: pass cityName to InstagramFunctions
         InstagramFunctions.get_image_links_for(cityName, IMAGECOUNT, function(images) {
 
-            
-/*
-            var marker = new google.maps.Marker({
-                position: map.center,
-                map: map,
-                icon: image
-            });
-*/
+        	if (markers.length > 0) {
+        		for (var j = 0; j < markers.length; j++) {
+        			markers[j].setMap(null);
+        		}
+
+        		markers = [];
+        	}
+
             var start_vector = [0.3, 0.0];
             var degree = math.PI / 4;
 
@@ -70,6 +71,8 @@
 	                map: map,
                   icon: images[i][1]
 	            });
+
+	            markers.push(marker);
 
               marker.postUrl = images[i][0];
 
