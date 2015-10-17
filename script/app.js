@@ -49,6 +49,27 @@
                 icon: image
             });
 
+            var start_vector = [0.3, 0.0];
+            var degree = 360.0 / 6;
+
+            function rotate(degree) {
+            	return math.matrix([[math.cos(degree), -math.sin(degree)], [math.sin(degree), math.cos(degree)]])
+            }
+
+            var radial_pos = [];
+            for (var i = 0; i < 360; i += degree) {
+            	var pos = math.multiply(rotate(i), start_vector);
+            	radial_pos.push(math.add(pos, [lat, lng]));
+            }
+
+            console.log(radial_pos);
+            for (var i = 0; i < radial_pos.length; i++) {
+            	new google.maps.Marker({
+	                position: new google.maps.LatLng(radial_pos[0], radial_pos[1]),
+	                map: map,
+	                icon: image
+	            });
+            }
             /*
             for (var i = 0; i < images.length; i++) {
 
