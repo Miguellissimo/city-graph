@@ -8,14 +8,14 @@ var InstagramFunctions = (function (window, document, undefined) {
     var INSTAGRAMURL = "https://api.instagram.com/v1/tags/";
     var RECENTURLEXTENSION = "/media/recent?client_id=";
 
-    function getImagesFromUrl(url, callBack) {
+    function getImagesFromUrl(url, callBack, count) {
         $.ajax({
             url: url,
             type: 'GET',
             crossDomain: true,
             dataType: 'jsonp',
             success: function(data) {
-                callBack(data);                
+                callBack(data, count);
             }
         });
     }
@@ -23,7 +23,7 @@ var InstagramFunctions = (function (window, document, undefined) {
     ret.getRecentImages = function(hashtag, n, callback_function) {
         console.log("getRecentImages called");
 
-        function callBack(data) {
+        function callBack(data, count) {
             var tuple_list = []; 
             for (var i = 0; i < n; i++) {
                 var link_profile = data.data[i].link;
@@ -43,7 +43,11 @@ var InstagramFunctions = (function (window, document, undefined) {
         var url = INSTAGRAMURL+ hashtag + RECENTURLEXTENSION + InstagramApi.clientId;
         var images = [];
 
-        function callBack(data){
+        function callBack(data, count) {
+            if(count === 0) {
+                return;
+            }
+
             url = data.pagination.next_url;
             for(var i = 0; i < data.data.length; i++) {
                 var link_profile = data.data[i].link;
@@ -51,11 +55,11 @@ var InstagramFunctions = (function (window, document, undefined) {
                 var likeCount = data.data[i].likes.count;
                 images.push([link_profile, thumbnail_link, likeCount]);
             }
+
+            getImagesFromUrl(url, callBack, count-1);
         }
 
-        for(var i = 0; i < 10; i++) {
-            getImagesFromUrl(url, callBack);
-        }
+        getImagesFromUrl(url, callBack, 5);
 
         images.sort(function(a , b) {
             if(a[2] < b[2]) {
@@ -68,9 +72,10 @@ var InstagramFunctions = (function (window, document, undefined) {
 
             return 0;
         });
+
         var ret = [];
 
-        for(i = 0; i < n; i++) {
+        for(var i = 0; i < n; i++) {
             ret.push(images[i]);
         }
 
