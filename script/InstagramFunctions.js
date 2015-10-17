@@ -2,7 +2,7 @@ var InstagramFunctions = (function (window, document, undefined) {
 
     var ret = {}
 
-    ret.get_image_links_for = function(hashtag, n) {
+    ret.get_image_links_for = function(hashtag, n, callback_function) {
         console.log("get_images_links_for called");
         $.ajax({
             url: 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent?client_id=' + InstagramApi.clientId,
@@ -16,7 +16,7 @@ var InstagramFunctions = (function (window, document, undefined) {
                 var thumbnail_link = data.data[i].images.low_resolution.url;
                 tuple_list.push([link_profile, thumbnail_link]);
             }
-            console.log(tuple_list); }
+            callback_function(tuple_list); }
         });
     };
     
