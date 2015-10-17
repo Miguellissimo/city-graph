@@ -76,10 +76,15 @@
 
               marker.postUrl = images[i][0];
 
+              marker.addListener('click', function(sender) {
+                window.open(this.postUrl);
+              });
+              /*
               google.maps.event.addListener(marker, 'click', function(sender) {
                 console.log(sender);
                 //window.open
               });
+*/
             }
             /*
             for (var i = 0; i < images.length; i++) {
