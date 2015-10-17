@@ -2,6 +2,7 @@
 	/* global $ */
 	/* global google */
 	/* global console */
+	/* InstagramApi */
 
 	var map;
 
