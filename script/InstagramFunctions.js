@@ -2,10 +2,10 @@ var InstagramFunctions = (function (window, document, undefined) {
 
     var ret = {}
 
-    ret.get_image_links_for = function(latitude, longitude, callback) {
+    ret.get_image_links_for = function(hashtag, n) {
         console.log("get_images_links_for called");
         $.ajax({
-            url: 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent?client_id=' + clientId,
+            url: 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent?client_id=' + InstagramApi.clientId,
             type: 'GET',
             crossDomain: true,
             dataType: 'jsonp',
