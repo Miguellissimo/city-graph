@@ -27,10 +27,6 @@ var GoogleMapsFunctions = (function (window, document, undefined) {
 				 i++;
 			}
 
-			//TODO find cityName from data
-			// results.address_components.types.includes("locality")
-			// shortname or longname
-
 			callback(cityName);
 		}, "json");
 	};

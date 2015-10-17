@@ -1,4 +1,43 @@
-#googleMap {
-	height: 500px;
-	width: 100%;
+body {
+	margin: 0;
+	height: 100%;
+	display: block;
+	overflow: hidden;
+	font-family: sans-serif;
+}
+
+header {
+    margin-top: 0;
+    display: block;
+    overflow: hidden;
+    font-family: sans-serif;
+    background-color: grey;
+}
+
+header > h1 {
+    margin-left: 15%;
+    color: white;
+}
+
+.searchControls {
+	width: 400px;
+	margin-top: 2%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2%;
+}
+
+
+#searchInput {
+	width: 290px;
+	font-size: 1.5em;
+	height: 30px;
+}
+
+#searchButton {
+	font-size: 1.5em;
+	width: 90px;
+	margin-top: 5px;
+	margin-left: auto;
+	margin-right: auto;
 }
