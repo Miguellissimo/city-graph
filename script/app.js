@@ -4,8 +4,11 @@
 	/* global console */
 	/* global InstagramApi */
     /* global GoogleMapsFunctions */
+    /* global math */
 
     var map;
+
+    var IMAGECOUNT = 8;
 
     function placeMarker(location) {
       var marker = new google.maps.Marker({
@@ -34,41 +37,46 @@
     GoogleMapsFunctions.getCityNameFromCoordinates(lat, lng, function(cityName){
         console.log(cityName);
         // TODO: pass cityName to InstagramFunctions
-        InstagramFunctions.get_image_links_for(cityName, 5, function(images) {
+        InstagramFunctions.get_image_links_for(cityName, IMAGECOUNT, function(images) {
 
-            var image = {
-                url: images[0][1],
-                size: new google.maps.Size(150, 150),
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 10
-            };
-
+            
+/*
             var marker = new google.maps.Marker({
                 position: map.center,
                 map: map,
                 icon: image
             });
-
+*/
             var start_vector = [0.3, 0.0];
-            var degree = 360.0 / 6;
+            var degree = math.PI / 4;
 
             function rotate(degree) {
-            	return math.matrix([[math.cos(degree), -math.sin(degree)], [math.sin(degree), math.cos(degree)]])
+            	return math.matrix([[math.cos(degree), math.sin(degree)],
+                [ -math.sin(degree), math.cos(degree)]]);
             }
 
             var radial_pos = [];
-            for (var i = 0; i < 360; i += degree) {
+            for (var i = 0; i < math.PI * 2; i += degree) {
             	var pos = math.multiply(rotate(i), start_vector);
+              pos._data[0]  = pos._data[0] / 2;
             	radial_pos.push(math.add(pos, [lat, lng]));
             }
 
             console.log(radial_pos);
-            for (var i = 0; i < radial_pos.length; i++) {
-            	new google.maps.Marker({
-	                position: new google.maps.LatLng(radial_pos[0], radial_pos[1]),
+            for (i = 0; i < radial_pos.length; i++) {
+
+            	var marker = new google.maps.Marker({
+	                position: new google.maps.LatLng(radial_pos[i]._data[0], radial_pos[i]._data[1]),
 	                map: map,
-	                icon: image
+                  icon: images[i][1]
 	            });
+
+              marker.postUrl = images[i][0];
+
+              google.maps.event.addListener(marker, 'click', function(sender) {
+                console.log(sender);
+                //window.open
+              });
             }
             /*
             for (var i = 0; i < images.length; i++) {
