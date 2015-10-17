@@ -2,7 +2,7 @@
 	/* global $ */
 	/* global google */
 	/* global console */
-	/* global InstagramApi */
+  /* global InstagramFunctions */
     /* global GoogleMapsFunctions */
     /* global math */
 
@@ -10,13 +10,6 @@
     var markers = [];
 
     var IMAGECOUNT = 8;
-
-    function placeMarker(location) {
-      var marker = new google.maps.Marker({
-       position: location,
-       map: map
-   });
-  }
 
   function setMapCenter() {
       navigator.geolocation.getCurrentPosition(function(position){
@@ -38,8 +31,9 @@
     GoogleMapsFunctions.getCityNameFromCoordinates(lat, lng, function(cityName){
         console.log(cityName);
         // TODO: pass cityName to InstagramFunctions
-        InstagramFunctions.get_image_links_for(cityName, IMAGECOUNT, function(images) {
+        //InstagramFunctions.getRecentImages(cityName, IMAGECOUNT, function(images) {
 
+          InstagramFunctions.getPopularImages(cityName, IMAGECOUNT, function(images) {
         	if (markers.length > 0) {
         		for (var j = 0; j < markers.length; j++) {
         			markers[j].setMap(null);
@@ -76,7 +70,7 @@
 
               marker.postUrl = images[i][0];
 
-              marker.addListener('click', function(sender) {
+              marker.addListener('click', function() {
                 window.open(this.postUrl);
               });
               /*
