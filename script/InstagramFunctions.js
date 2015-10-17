@@ -13,7 +13,7 @@ var InstagramFunctions = (function (window, document, undefined) {
             var tuple_list = []; 
             for (i = 0; i < n; i++) {
                 var link_profile = data.data[i].link;
-                var thumbnail_link = data.data[i].images.low_resolution.url;
+                var thumbnail_link = data.data[i].images.thumbnail.url;
                 tuple_list.push([link_profile, thumbnail_link]);
             }
             callback_function(tuple_list); }
