@@ -11,8 +11,6 @@
 			position: location,
 			map: map
 		});
-
-		//google.maps.event.addListener(marker, 'click', indexViewMarkerClicked);
 	}
 
 	function setMapCenter() {
@@ -22,7 +20,14 @@
 				position.coords.longitude);
 
 			map.setCenter(latLng);
-        });
+		});
+	}
+
+	function mapClicked(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+
+        console.log(lat + " " + lng);
 	}
 
 	function initializeMap() {
@@ -36,16 +41,10 @@
 		map = new google.maps.Map(googleMap, mapProp);
 		setMapCenter();
 
-    // TODO: eventListener in die EditMap auslagern.
-    google.maps.event.addListener(map, 'click', function(event) {
-    	placeMarker(event.latLng);
-    });
-}
+        google.maps.event.addListener(map, 'click', mapClicked);
+    }
 
-
-$(document).ready(function() {
-	initializeMap();
-
-});
-
+    $(document).ready(function() {
+       initializeMap();
+   });
 })();
