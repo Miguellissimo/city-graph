@@ -10,7 +10,29 @@
     var markers = [];
     var hashTagMarkers = [];
 
+    var pathCoordinates = [];
+    var path;
+
     var IMAGECOUNT = 8;
+
+    function refreshPath(lat, lng) {
+        pathCoordinates.push({
+                lat: lat,
+                lng: lng
+            });
+        path.setMap(null);
+        
+        path = new google.maps.Polyline({
+            path: pathCoordinates,
+            geodesic: true,
+            strokeColor: '#0000FF',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        path.setMap(map);
+
+    }
 
     function setMapCenter() {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -18,6 +40,7 @@
                 position.coords.latitude,
                 position.coords.longitude);
 
+            refreshPath(position.coords.latitude, position.coords.longitude);
             map.setCenter(latLng);
         });
     }
@@ -26,6 +49,8 @@
         GoogleMapsFunctions.getCoordinatesFromCityName(tag, function(position) {
             var lat = position.lat;
             var lng = position.lng;
+
+            refreshPath(lat, lng);
 
             InstagramFunctions.getRecentImages(tag, IMAGECOUNT, lat, lng, displayImagesOnMap);
 
@@ -64,28 +89,28 @@
     }
 
     function removeHashTagMarkers() {
-     if (hashTagMarkers.length > 0) {
-            for (var j = 0; j < hashTagMarkers.length; j++) {
-                hashTagMarkers[j].setMap(null);
-            }
+       if (hashTagMarkers.length > 0) {
+        for (var j = 0; j < hashTagMarkers.length; j++) {
+            hashTagMarkers[j].setMap(null);
+        }
 
-            hashTagMarkers = [];
-        }   
-    }
+        hashTagMarkers = [];
+    }   
+}
 
-    function hashTagMarkerClicked() {
-        var label = this.labelContent;
-        removeHashTagMarkers();
-        getImagesByTag(label);
-    }
+function hashTagMarkerClicked() {
+    var label = this.labelContent;
+    removeHashTagMarkers();
+    getImagesByTag(label);
+}
 
-    function markerClicked() {
-        var marker = this;
+function markerClicked() {
+    var marker = this;
 
-        if(markers.length > 1) {
-            removeOldMarkers();
-            marker.setMap(map);
-            markers.push(marker);
+    if(markers.length > 1) {
+        removeOldMarkers();
+        marker.setMap(map);
+        markers.push(marker);
             //marker.icon = marker.imageUrl;
             marker.setPosition(new google.maps.LatLng(marker.originalLat, marker.originalLng));
 
@@ -151,6 +176,8 @@
         var lat = event.latLng.lat();
         var lng = event.latLng.lng();
 
+        refreshPath(lat, lng);
+
         map.setCenter(event.latLng);
         map.setZoom(10);
 
@@ -182,6 +209,16 @@
 
     $(document).ready(function() {
         initializeMap();
+
+        path = new google.maps.Polyline({
+            path: pathCoordinates,
+            geodesic: true,
+            strokeColor: '#0000FF',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        path.setMap(map);
 
         $('#searchButton').click(function(){
             var cityName = $('#searchInput').val();
