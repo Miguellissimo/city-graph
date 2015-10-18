@@ -99,6 +99,7 @@
 function hashTagMarkerClicked() {
     var label = this.labelContent;
     removeHashTagMarkers();
+    $('#searchInput').val(label);
     getImagesByTag(label);
 }
 
@@ -181,6 +182,8 @@ function markerClicked() {
 
         GoogleMapsFunctions.getCityNameFromCoordinates(lat, lng, function(cityName) {
             console.log(cityName);
+
+            $('#searchInput').val(cityName);
 
             InstagramFunctions.getRecentImages(cityName, IMAGECOUNT, lat, lng, displayImagesOnMap);
         });
