@@ -21,6 +21,27 @@
         });
     }
 
+    function moveMarker(marker) {
+        var marker = this;
+        var oldPosition = marker.getPosition();
+        var deltaLat = marker.originalLat - oldPosition.lat();
+        var deltaLng = marker.originalLng - oldPosition.lng();
+
+        var latStep = deltaLat / 50;
+        var lngStep = deltaLng / 50;
+
+        for(var i = 0; i < 50; i++) {
+            setTimeout(function() {
+                var lat = marker.getPosition().lat() + latStep;
+                var lng = marker.getPosition().lng() + lngStep;
+                marker.setPosition(new google.maps.LatLng(lat, lng));    
+            }, 50);
+        }
+        
+
+        //this.setPosition(new google.maps.LatLng(this.originalLat, this.originalLng));
+    }
+
     function mapClicked(event) {
         var lat = event.latLng.lat();
         var lng = event.latLng.lng();
@@ -67,11 +88,10 @@
                     markers.push(marker);
 
                     marker.postUrl = images[i][0];
+                    marker.originalLat = lat;
+                    marker.originalLng = lng;
 
-                    marker.addListener('click', function() {
-                        window.open(this.postUrl);
-                    });
-
+                    marker.addListener('click', moveMarker);
                 }
             });
 });
