@@ -21,39 +21,9 @@
         });
     }
 
-    function moveMarker(marker) {
-        var marker = this;
-        var oldPosition = marker.getPosition();
-        var deltaLat = marker.originalLat - oldPosition.lat();
-        var deltaLng = marker.originalLng - oldPosition.lng();
-
-        var latStep = deltaLat / 50;
-        var lngStep = deltaLng / 50;
-
-        for(var i = 0; i < 50; i++) {
-            setTimeout(function() {
-                var lat = marker.getPosition().lat() + latStep;
-                var lng = marker.getPosition().lng() + lngStep;
-                marker.setPosition(new google.maps.LatLng(lat, lng));    
-            }, 50);
-        }
-        
-
-        //this.setPosition(new google.maps.LatLng(this.originalLat, this.originalLng));
-    }
-
-    function displayImagesOnMap(images, lat, lng) {
-
-        if (markers.length > 0) {
-            for (var j = 0; j < markers.length; j++) {
-                markers[j].setMap(null);
-            }
-
-            markers = [];
-        }
-
+    function calculateRadialPositions(lat, lng) {
         var start_vector = [0.3, 0.0];
-        var degree = math.PI / 4;
+        var degree = math.PI / (IMAGECOUNT/2);
 
         function rotate(degree) {
             return math.matrix([[math.cos(degree), math.sin(degree)],
@@ -67,8 +37,42 @@
             radial_pos.push(math.add(pos, [lat, lng]));
         }
 
+        return radial_pos;
+    }
+
+    function removeOldMarkers() {
+        if (markers.length > 0) {
+            for (var j = 0; j < markers.length; j++) {
+                markers[j].setMap(null);
+            }
+
+            markers = [];
+        }
+    }
+
+    function markerClicked(marker) {
+        var marker = this;
+
+        if(markers.length > 1) {
+            removeOldMarkers();
+            marker.setMap(map);
+            markers.push(marker);
+            //marker.icon = marker.imageUrl;
+            marker.setPosition(new google.maps.LatLng(marker.originalLat, marker.originalLng));            
+        }
+        else {
+            window.open(marker.postUrl);
+        }        
+    }
+
+    function displayImagesOnMap(images, lat, lng) {
+
+        removeOldMarkers();
+
+        
+        var radial_pos = calculateRadialPositions(lat, lng);
         console.log(radial_pos);
-        for (i = 0; i < radial_pos.length; i++) {
+        for (var i = 0; i < radial_pos.length; i++) {
 
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(radial_pos[i]._data[0], radial_pos[i]._data[1]),
@@ -78,11 +82,14 @@
 
             markers.push(marker);
 
+
             marker.postUrl = images[i][0];
+            marker.thumbnailUrl = images[i][1];
+            marker.imageUrl = images[i][2];
             marker.originalLat = lat;
             marker.originalLng = lng;
 
-            marker.addListener('click', moveMarker);
+            marker.addListener('click', markerClicked);
         }
 
     }
@@ -112,18 +119,9 @@
         map = new google.maps.Map(googleMap, mapProp);
         setMapCenter();
 
-        map.addListener('zoom_changed', function() {
-            if (markers.length > 0) {
-                for (var j = 0; j < markers.length; j++) {
-                    markers[j].setMap(null);
-                }
-
-                markers = [];
-            }
-        });
+        map.addListener('zoom_changed', removeOldMarkers);
 
         google.maps.event.addListener(map, 'click', mapClicked);
-
 
         var mapHeight = $(window).height() - $('header').height() - $('.searchControls').height();
         $('#googleMap').height(mapHeight);
@@ -136,12 +134,10 @@
             var cityName = $('#searchInput').val();
             console.log(cityName);
 
-
             GoogleMapsFunctions.getCoordinatesFromCityName(cityName, function(position) {
                 var lat = position.lat;
                 var lng = position.lng;
 
-                
                 InstagramFunctions.getRecentImages(cityName, IMAGECOUNT, lat, lng, displayImagesOnMap);
 
                 map.setCenter(new google.maps.LatLng(lat, lng));
