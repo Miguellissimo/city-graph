@@ -21,7 +21,7 @@
                 lng: lng
             });
         path.setMap(null);
-        
+
         path = new google.maps.Polyline({
             path: pathCoordinates,
             geodesic: true,
@@ -49,8 +49,6 @@
         GoogleMapsFunctions.getCoordinatesFromCityName(tag, function(position) {
             var lat = position.lat;
             var lng = position.lng;
-
-            refreshPath(lat, lng);
 
             InstagramFunctions.getRecentImages(tag, IMAGECOUNT, lat, lng, displayImagesOnMap);
 
@@ -170,13 +168,13 @@ function markerClicked() {
             marker.addListener('click', markerClicked);
         }
 
+        refreshPath(lat, lng);
+
     }
 
     function mapClicked(event) {
         var lat = event.latLng.lat();
         var lng = event.latLng.lng();
-
-        refreshPath(lat, lng);
 
         map.setCenter(event.latLng);
         map.setZoom(10);
