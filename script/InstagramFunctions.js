@@ -29,7 +29,8 @@ var InstagramFunctions = (function (window, document, undefined) {
                 var link_profile = data.data[i].link;
                 var thumbnail_link = data.data[i].images.thumbnail.url;
                 var big_image = data.data[i].images.standard_resolution;
-                tuple_list.push([link_profile, thumbnail_link, big_image]);
+                var hashTags = data.data[i].tags;
+                tuple_list.push([link_profile, thumbnail_link, big_image, hashTags]);
             }
             callback_function(tuple_list, lat, lng);
         }

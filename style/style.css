@@ -34,3 +34,10 @@ body {
 .nav li {
 	display: inline;
 }
+
+.hashTaglabels {
+	padding: 1px;
+	background-color: blue;
+	font-size: 1.5em;
+	color: red;
+}
