@@ -20,7 +20,7 @@ var InstagramFunctions = (function (window, document, undefined) {
         });
     }
 
-    ret.getRecentImages = function(hashtag, n, callback_function) {
+    ret.getRecentImages = function(hashtag, n, lat, lng, callback_function) {
         console.log("getRecentImages called");
 
         function callBack(data, count) {
@@ -30,7 +30,7 @@ var InstagramFunctions = (function (window, document, undefined) {
                 var thumbnail_link = data.data[i].images.thumbnail.url;
                 tuple_list.push([link_profile, thumbnail_link]);
             }
-            callback_function(tuple_list);
+            callback_function(tuple_list, lat, lng);
         }
 
         var url = INSTAGRAMURL+ hashtag + RECENTURLEXTENSION + InstagramApi.clientId;

@@ -6,7 +6,7 @@ var GoogleMapsFunctions = (function (window, document, undefined) {
 
 	// privates variables
 	var COORDINATESTOCITYURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
-	var CITYTOCOORDINATESURL = "";
+	var CITYTOCOORDINATESURL = "https://maps.google.com/maps/api/geocode/json?address=";
 
 	ret.getCityNameFromCoordinates = function(latitude, longitude, callback) {
 		var url = COORDINATESTOCITYURL + latitude + "," + longitude;
@@ -32,7 +32,13 @@ var GoogleMapsFunctions = (function (window, document, undefined) {
 	};
 
 	ret.getCoordinatesFromCityName = function(city, callback) {
-		//TODO
+		var url = CITYTOCOORDINATESURL + city;
+		console.log(url);
+
+		$.get(url, function(data) {
+			var results = data.results[0].geometry.location;
+			callback(results);
+		}, "json");
 	};
 
 	return ret;
