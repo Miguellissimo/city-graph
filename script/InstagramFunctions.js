@@ -23,12 +23,13 @@ var InstagramFunctions = (function (window, document, undefined) {
     ret.getRecentImages = function(hashtag, n, lat, lng, callback_function) {
         console.log("getRecentImages called");
 
-        function callBack(data, count) {
+        function callBack(data) {
             var tuple_list = []; 
             for (var i = 0; i < n; i++) {
                 var link_profile = data.data[i].link;
                 var thumbnail_link = data.data[i].images.thumbnail.url;
-                tuple_list.push([link_profile, thumbnail_link]);
+                var big_image = data.data[i].images.standard_resolution;
+                tuple_list.push([link_profile, thumbnail_link, big_image]);
             }
             callback_function(tuple_list, lat, lng);
         }
